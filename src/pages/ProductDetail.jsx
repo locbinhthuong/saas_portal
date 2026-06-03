@@ -7,7 +7,7 @@ import { useProducts } from '../data/ProductContext';
 export default function ProductDetail() {
   const { id } = useParams();
   const { products } = useProducts();
-  const product = products.find(p => p.id === id);
+  const product = products.find(p => p._id === id || p.id === id);
 
   if (!product) return <div className="pt-32 text-center text-slate-500">Phần mềm không tồn tại (Hoặc đã bị ẩn).</div>;
 

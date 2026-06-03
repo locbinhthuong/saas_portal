@@ -96,7 +96,7 @@ export default function Home() {
                   <Link to={`/product/${product.id || product._id}`} className="block w-full py-3 text-center rounded-xl bg-white hover:bg-slate-50 border border-slate-200 text-slate-900 font-bold transition-all shadow-sm hover:shadow-md">
                     Xem Chi Tiết & Dùng Thử
                   </Link>
-                  <Link to={`/checkout/${product.id}`} className="block w-full py-3 text-center rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-bold transition-all hover:scale-[1.02] shadow-md">
+                  <Link to={`/checkout/${product._id || product.id}`} className="block w-full py-3 text-center rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-bold transition-all hover:scale-[1.02] shadow-md">
                     Thuê từ {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(product.pricing.monthly)} / Tháng
                   </Link>
                 </div>
