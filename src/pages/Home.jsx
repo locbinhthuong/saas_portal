@@ -95,7 +95,7 @@ export default function Home() {
                 <div className="flex flex-col gap-3 relative z-20">
                   {product.demoUrl ? (
                     <a href={product.demoUrl} target="_blank" rel="noreferrer" className="block w-full py-3 text-center rounded-xl bg-white hover:bg-slate-50 border border-slate-200 text-slate-900 font-bold transition-all shadow-sm hover:shadow-md">
-                      Tải Bản Dùng Thử
+                      Dùng Thử Ngay
                     </a>
                   ) : (
                     <button disabled className="block w-full py-3 text-center rounded-xl bg-slate-100 text-slate-400 font-bold cursor-not-allowed">
