@@ -11,8 +11,27 @@ import AdminLayout from './layouts/AdminLayout';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import ProductList from './pages/admin/ProductList';
 import ProductForm from './pages/admin/ProductForm';
+import TenantApp from './TenantApp';
 
 function App() {
+  const hostname = window.location.hostname;
+  
+  // Kiểm tra xem có phải là Subdomain không
+  // Bỏ qua localhost hoặc vercel app base domain
+  const isSubdomain = hostname !== 'localhost' 
+    && hostname !== '127.0.0.1' 
+    && !hostname.startsWith('saas-portal-omega') // Tên miền Vercel của bạn
+    && hostname.split('.').length >= 3; 
+    
+  if (isSubdomain) {
+    const subdomain = hostname.split('.')[0];
+    return (
+      <BrowserRouter>
+        <TenantApp subdomain={subdomain} />
+      </BrowserRouter>
+    );
+  }
+
   return (
     <BrowserRouter>
       <Routes>

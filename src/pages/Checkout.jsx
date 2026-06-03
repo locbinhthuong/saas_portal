@@ -93,7 +93,27 @@ export default function Checkout() {
                   </div>
                   
                   <button 
-                    onClick={() => setStep(3)}
+                    onClick={async () => {
+                      try {
+                        const token = localStorage.getItem('saas_auth_token');
+                        const res = await fetch('/api/tenant/subscribe', {
+                          method: 'POST',
+                          headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                          },
+                          body: JSON.stringify({ productId: product.id || product._id })
+                        });
+                        if (res.ok) {
+                          setStep(3);
+                        } else {
+                          const err = await res.json();
+                          alert(err.message);
+                        }
+                      } catch (error) {
+                        alert('Lỗi kết nối khi thanh toán');
+                      }
+                    }}
                     className="w-full mt-6 bg-primary-600 text-white py-4 rounded-xl font-medium hover:bg-primary-700 transition-colors"
                   >
                     Tôi đã chuyển khoản
@@ -110,15 +130,14 @@ export default function Checkout() {
                   <p className="text-slate-600 mb-8 max-w-md mx-auto">
                     Chúng tôi đang khởi tạo hệ thống <strong>{product.name}</strong> cho doanh nghiệp của bạn. Thông tin truy cập sẽ được gửi vào Email trong vòng 10 phút.
                   </p>
-                  <button 
-                    onClick={() => {
-                      localStorage.setItem('purchasedApp', product.id);
-                      window.location.href = '/dashboard';
-                    }}
+                  <a 
+                    href={`http://${currentUser?.tenant?.subdomain}.saas.com`}
+                    target="_blank"
+                    rel="noreferrer"
                     className="inline-block bg-slate-900 text-white px-8 py-3 rounded-full font-medium hover:bg-slate-800 transition-colors"
                   >
-                    Vào Bảng Điều Khiển Của Bạn
-                  </button>
+                    Mở Ứng Dụng Của Bạn
+                  </a>
                 </motion.div>
               )}
             </motion.div>

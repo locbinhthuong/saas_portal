@@ -19,6 +19,10 @@ const TenantSchema = new mongoose.Schema({
   trialExpiresAt: {
     type: Date,
     required: true,
+  },
+  subscriptionPlan: {
+    type: String,
+    default: 'Free Trial',
   }
 }, { timestamps: true });
 
