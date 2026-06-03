@@ -1,6 +1,6 @@
-import { connectDB } from '../utils/db.js';
-import User from '../models/User.js';
-import Tenant from '../models/Tenant.js';
+import { connectDB } from '../../utils/db.js';
+import User from '../../models/User.js';
+import Tenant from '../../models/Tenant.js';
 import bcrypt from 'bcryptjs';
 
 export default async function handler(req, res) {
