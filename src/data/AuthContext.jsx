@@ -71,6 +71,8 @@ export const AuthProvider = ({ children }) => {
 
   const logout = () => {
     setCurrentUser(null);
+    localStorage.removeItem('saas_auth_token');
+    window.location.href = '/';
   };
 
   return (

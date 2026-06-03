@@ -38,9 +38,15 @@ export default function CustomerDashboard() {
 
   return (
     <div className="min-h-screen bg-slate-50 flex pt-20">
-      {/* Sidebar */}
       <aside className="w-64 bg-white border-r border-slate-200 hidden md:block fixed h-full z-10">
         <div className="p-6">
+          <Link to="/" className="flex items-center gap-2 mb-8 group">
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-cyan-500 to-blue-500 flex items-center justify-center text-white font-bold font-display shadow-md">
+              N
+            </div>
+            <span className="font-display font-bold text-slate-900 group-hover:text-blue-600 transition-colors">Về Trang Chủ</span>
+          </Link>
+          
           <h2 className="text-xs uppercase font-bold text-slate-400 tracking-wider mb-4">Quản lý không gian</h2>
           <nav className="space-y-2">
             <button onClick={() => setActiveTab('apps')} className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-colors ${activeTab === 'apps' ? 'bg-primary-50 text-primary-600' : 'text-slate-600 hover:bg-slate-100'}`}>
