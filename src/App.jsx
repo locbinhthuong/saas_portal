@@ -15,19 +15,29 @@ import TenantApp from './TenantApp';
 
 function App() {
   const hostname = window.location.hostname;
+  const urlParams = new URLSearchParams(window.location.search);
+  const workspaceParam = urlParams.get('workspace');
+  const tokenParam = urlParams.get('token');
+
+  // Nếu có token trên URL (truyền từ Portal sang Workspace), lưu vào localStorage
+  if (tokenParam) {
+    localStorage.setItem('saas_auth_token', tokenParam);
+    // Xóa token khỏi URL cho bảo mật
+    window.history.replaceState({}, document.title, window.location.pathname + (workspaceParam ? `?workspace=${workspaceParam}` : ''));
+  }
   
-  // Kiểm tra xem có phải là Subdomain không
-  // Bỏ qua localhost hoặc vercel app base domain
+  // Kiểm tra xem có phải là Subdomain hoặc có param workspace không
   const isSubdomain = hostname !== 'localhost' 
     && hostname !== '127.0.0.1' 
-    && !hostname.startsWith('saas-portal-omega') // Tên miền Vercel của bạn
+    && !hostname.startsWith('saas-portal-omega') 
     && hostname.split('.').length >= 3; 
     
-  if (isSubdomain) {
-    const subdomain = hostname.split('.')[0];
+  const activeSubdomain = isSubdomain ? hostname.split('.')[0] : workspaceParam;
+    
+  if (activeSubdomain) {
     return (
       <BrowserRouter>
-        <TenantApp subdomain={subdomain} />
+        <TenantApp subdomain={activeSubdomain} />
       </BrowserRouter>
     );
   }

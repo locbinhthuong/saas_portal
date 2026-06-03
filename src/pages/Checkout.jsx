@@ -131,7 +131,7 @@ export default function Checkout() {
                     Chúng tôi đang khởi tạo hệ thống <strong>{product.name}</strong> cho doanh nghiệp của bạn. Thông tin truy cập sẽ được gửi vào Email trong vòng 10 phút.
                   </p>
                   <a 
-                    href={`http://${currentUser?.tenant?.subdomain}.saas.com`}
+                    href={`/?workspace=${currentUser?.tenant?.subdomain}&token=${localStorage.getItem('saas_auth_token')}`}
                     target="_blank"
                     rel="noreferrer"
                     className="inline-block bg-slate-900 text-white px-8 py-3 rounded-full font-medium hover:bg-slate-800 transition-colors"

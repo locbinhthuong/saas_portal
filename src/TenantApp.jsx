@@ -99,7 +99,7 @@ export default function TenantApp({ subdomain }) {
           <div className="flex items-center gap-3">
             <span className="text-sm font-medium text-slate-700 cursor-pointer" onClick={() => {
               localStorage.removeItem('saas_auth_token');
-              window.location.href = `http://${window.location.hostname.replace(`${subdomain}.`, '')}`;
+              window.location.href = '/';
             }}>Đăng xuất</span>
           </div>
         </header>

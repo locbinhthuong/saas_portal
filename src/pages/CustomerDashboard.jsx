@@ -109,7 +109,7 @@ export default function CustomerDashboard() {
                    </div>
                    
                    <div className="flex flex-col gap-3 w-full md:w-auto">
-                     <a href={`http://${tenantInfo.subdomain}.saas.com`} target="_blank" rel="noreferrer" className="flex items-center justify-center gap-2 bg-primary-600 text-white px-6 py-3 rounded-xl font-medium hover:bg-primary-700 transition-colors shadow-lg shadow-primary-600/20">
+                     <a href={`/?workspace=${tenantInfo.subdomain}&token=${localStorage.getItem('saas_auth_token')}`} target="_blank" rel="noreferrer" className="flex items-center justify-center gap-2 bg-primary-600 text-white px-6 py-3 rounded-xl font-medium hover:bg-primary-700 transition-colors shadow-lg shadow-primary-600/20">
                        Mở Hệ Thống <ExternalLink size={18} />
                      </a>
                      <button className="flex items-center justify-center gap-2 bg-white text-slate-700 border border-slate-200 px-6 py-3 rounded-xl font-medium hover:bg-slate-50 transition-colors">

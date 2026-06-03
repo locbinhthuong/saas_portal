@@ -88,8 +88,8 @@ export default function AdminDashboard() {
                </td>
                <td className="px-4 py-4">
                  <span className="font-medium text-slate-700">{tenant.name}</span>
-                 <a href={`http://${tenant.subdomain}.saas.com`} target="_blank" rel="noreferrer" className="block text-xs text-blue-500 hover:underline">
-                   {tenant.subdomain}.saas.com
+                 <a href={`/?workspace=${tenant.subdomain}`} target="_blank" rel="noreferrer" className="block text-xs text-blue-500 hover:underline">
+                   Mở Workspace ({tenant.subdomain})
                  </a>
                </td>
                <td className="px-4 py-4">
