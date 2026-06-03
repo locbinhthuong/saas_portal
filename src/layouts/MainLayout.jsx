@@ -29,7 +29,7 @@ export default function MainLayout() {
         
         <div className="hidden md:flex items-center gap-4">
           {currentUser ? (
-             <Link to="/dashboard" className="bg-slate-900 text-white px-5 py-2.5 rounded-full font-medium hover:bg-slate-800 transition shadow-md border border-slate-700">
+             <Link to={currentUser.role === 'ADMIN' ? '/admin' : '/dashboard'} className="bg-slate-900 text-white px-5 py-2.5 rounded-full font-medium hover:bg-slate-800 transition shadow-md border border-slate-700">
                Vào Quản Trị ({currentUser.name})
              </Link>
           ) : (

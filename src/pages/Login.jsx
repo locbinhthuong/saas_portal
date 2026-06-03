@@ -17,7 +17,11 @@ export default function Login() {
     e.preventDefault();
     const result = await login(email, password);
     if (result.success) {
-       navigate(from, { replace: true });
+       if (result.role === 'ADMIN') {
+         navigate('/admin', { replace: true });
+       } else {
+         navigate('/', { replace: true });
+       }
     } else {
        alert(result.message || 'Đăng nhập thất bại');
     }

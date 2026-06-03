@@ -59,10 +59,10 @@ export const AuthProvider = ({ children }) => {
         return { success: false, message: data.message || 'Đăng nhập thất bại' };
       }
       
-      // Lưu Token vào localStorage
+      // Lưu Token
       localStorage.setItem('saas_auth_token', data.token);
       setCurrentUser(data.user);
-      return { success: true };
+      return { success: true, role: data.user.role };
     } catch (err) {
       console.error(err);
       return { success: false, message: 'Lỗi kết nối mạng' };
