@@ -17,16 +17,18 @@ export default function ProductForm() {
     features: ['']
   });
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if(!formData.name) return alert("Vui lòng nhập tên");
     
-    addProduct({
+    const success = await addProduct({
       ...formData,
       features: formData.features.filter(f => f.trim() !== '')
     });
     
-    navigate('/admin/products');
+    if (success) {
+      navigate('/admin/products');
+    }
   };
 
   const updateFeature = (index, value) => {

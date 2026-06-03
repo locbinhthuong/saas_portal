@@ -34,15 +34,27 @@ export const ProductProvider = ({ children }) => {
 
   const addProduct = async (product) => {
     try {
+      const token = localStorage.getItem('saas_auth_token');
       const res = await fetch('/api/products', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
         body: JSON.stringify(product)
       });
       if (res.ok) {
         fetchProducts(); // refresh
+        return true;
+      } else {
+        const err = await res.json();
+        alert(err.message || 'Lỗi thêm sản phẩm');
+        return false;
       }
-    } catch(e) {}
+    } catch(e) {
+      console.error(e);
+      return false;
+    }
   };
 
   const updateProduct = (id, updatedProduct) => {

@@ -1,5 +1,6 @@
 import { connectDB } from '../utils/db.js';
 import Product from '../models/Product.js';
+import jwt from 'jsonwebtoken';
 
 export default async function handler(req, res) {
   // CORS headers
@@ -27,7 +28,20 @@ export default async function handler(req, res) {
 
   if (req.method === 'POST') {
     try {
-      // TODO: Thêm middleware kiểm tra quyền Admin sau
+      // Kiểm tra Token và Quyền Admin
+      const authHeader = req.headers.authorization;
+      if (!authHeader || !authHeader.startsWith('Bearer ')) {
+        return res.status(401).json({ message: 'Không có quyền truy cập' });
+      }
+
+      const jwtSecret = process.env.JWT_SECRET || 'fallback_secret_for_local_dev';
+      const token = authHeader.split(' ')[1];
+      const decoded = jwt.verify(token, jwtSecret);
+
+      if (decoded.role !== 'ADMIN') {
+        return res.status(403).json({ message: 'Chỉ Admin mới có quyền thêm sản phẩm' });
+      }
+
       const { name, category, description, icon, color, features, demoUrl, pricing } = req.body;
       
       const newProduct = await Product.create({

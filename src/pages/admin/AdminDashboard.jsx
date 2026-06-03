@@ -1,11 +1,33 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Package, Users, DollarSign, TrendingUp } from 'lucide-react';
 import { useProducts } from '../../data/ProductContext';
 import { useAuth } from '../../data/AuthContext';
 
 export default function AdminDashboard() {
   const { products } = useProducts();
-  const { users } = useAuth();
+  const [tenants, setTenants] = useState([]);
+  
+  useEffect(() => {
+    const fetchTenants = async () => {
+      try {
+        const token = localStorage.getItem('saas_auth_token');
+        if (!token) return;
+        const res = await fetch('/api/admin/tenants', {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        if (res.ok) {
+          const data = await res.json();
+          setTenants(data);
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    
+    fetchTenants();
+  }, []);
   
   return (
     <div className="max-w-6xl mx-auto">
@@ -19,9 +41,9 @@ export default function AdminDashboard() {
             </div>
           </div>
           <p className="text-sm text-slate-500 font-medium mb-1">Doanh thu dự kiến</p>
-          <h3 className="text-2xl font-bold font-display text-slate-800">12,500,000 ₫</h3>
+          <h3 className="text-2xl font-bold font-display text-slate-800">0 ₫</h3>
           <p className="text-xs text-green-600 flex items-center gap-1 mt-2">
-            <TrendingUp size={14} /> +15% so với tháng trước
+            <TrendingUp size={14} /> Hệ thống mới
           </p>
         </div>
         
@@ -42,7 +64,7 @@ export default function AdminDashboard() {
             </div>
           </div>
           <p className="text-sm text-slate-500 font-medium mb-1">Khách hàng Đăng ký</p>
-          <h3 className="text-2xl font-bold font-display text-slate-800">{users?.length || 0} Người</h3>
+          <h3 className="text-2xl font-bold font-display text-slate-800">{tenants.length} Người</h3>
         </div>
       </div>
       
@@ -52,18 +74,41 @@ export default function AdminDashboard() {
           <thead className="bg-slate-50 text-slate-500">
              <tr>
                <th className="px-4 py-3 rounded-l-lg">Khách hàng</th>
-               <th className="px-4 py-3">Phần mềm thuê</th>
+               <th className="px-4 py-3">Tên cửa hàng (Subdomain)</th>
                <th className="px-4 py-3">Tình trạng</th>
-               <th className="px-4 py-3 rounded-r-lg">Hạn dùng</th>
+               <th className="px-4 py-3 rounded-r-lg">Gói cước</th>
              </tr>
           </thead>
           <tbody>
-             <tr className="border-b border-slate-50">
-               <td className="px-4 py-4 font-medium">Nguyễn Văn A</td>
-               <td className="px-4 py-4">AloShipp Express</td>
-               <td className="px-4 py-4"><span className="text-green-600 bg-green-50 px-2 py-1 rounded-md font-medium text-xs">Hoạt động</span></td>
-               <td className="px-4 py-4 text-slate-500">30 ngày</td>
+            {tenants.map(tenant => (
+             <tr key={tenant._id} className="border-b border-slate-50 hover:bg-slate-50">
+               <td className="px-4 py-4 font-medium">
+                 {tenant.owner}
+                 <div className="text-xs text-slate-400 font-normal">{tenant.email}</div>
+               </td>
+               <td className="px-4 py-4">
+                 <span className="font-medium text-slate-700">{tenant.name}</span>
+                 <a href={`http://${tenant.subdomain}.saas.com`} target="_blank" rel="noreferrer" className="block text-xs text-blue-500 hover:underline">
+                   {tenant.subdomain}.saas.com
+                 </a>
+               </td>
+               <td className="px-4 py-4">
+                 {tenant.status === 'TRIAL' ? (
+                   <span className="text-yellow-600 bg-yellow-50 px-2 py-1 rounded-md font-medium text-xs">Dùng thử</span>
+                 ) : tenant.status === 'ACTIVE' ? (
+                   <span className="text-green-600 bg-green-50 px-2 py-1 rounded-md font-medium text-xs">Hoạt động</span>
+                 ) : (
+                   <span className="text-red-600 bg-red-50 px-2 py-1 rounded-md font-medium text-xs">Bị khóa</span>
+                 )}
+               </td>
+               <td className="px-4 py-4 text-slate-500">{tenant.subscriptionPlan || 'Miễn phí'}</td>
              </tr>
+            ))}
+            {tenants.length === 0 && (
+              <tr>
+                <td colSpan="4" className="text-center py-8 text-slate-400">Chưa có khách hàng nào</td>
+              </tr>
+            )}
           </tbody>
         </table>
       </div>

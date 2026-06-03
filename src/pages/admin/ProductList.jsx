@@ -30,7 +30,7 @@ export default function ProductList() {
           </thead>
           <tbody className="divide-y divide-slate-100">
             {products.map((product) => (
-              <tr key={product.id} className="hover:bg-slate-50 transition-colors">
+              <tr key={product._id || product.id} className="hover:bg-slate-50 transition-colors">
                 <td className="px-6 py-4">
                   <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${product.color || 'from-slate-400 to-slate-500'} flex items-center justify-center p-2 shadow-sm`}>
                    {product.imgUrl ? <img src={product.imgUrl} className="w-full h-full object-cover rounded-md" alt="icon"/> : <Box className="text-white" size={24} />}
@@ -44,7 +44,7 @@ export default function ProductList() {
                   {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(product.pricing?.monthly || 0)}
                 </td>
                 <td className="px-6 py-4 text-right space-x-2">
-                  <button onClick={() => { if(window.confirm('Chắc chắn xóa?')) deleteProduct(product.id) }} className="p-2 text-slate-400 hover:text-red-600 bg-white rounded-lg border border-slate-200 shadow-sm transition-colors">
+                  <button onClick={() => { if(window.confirm('Chắc chắn xóa?')) deleteProduct(product._id || product.id) }} className="p-2 text-slate-400 hover:text-red-600 bg-white rounded-lg border border-slate-200 shadow-sm transition-colors">
                     <Trash2 size={16} />
                   </button>
                 </td>
