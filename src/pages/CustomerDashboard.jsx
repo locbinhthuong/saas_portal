@@ -3,14 +3,38 @@ import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { LayoutDashboard, Package, CreditCard, Settings, ExternalLink, LogOut, CheckCircle2 } from 'lucide-react';
 import { useProducts } from '../data/ProductContext';
+import { useAuth } from '../data/AuthContext';
 
 export default function CustomerDashboard() {
   const [activeTab, setActiveTab] = useState('apps');
   const { products } = useProducts();
+  const { currentUser, logout } = useAuth();
+  const [tenantInfo, setTenantInfo] = useState(null);
 
-  // Lấy dữ liệu mua hàng (Mock từ LocalStorage)
-  const purchasedAppId = localStorage.getItem('purchasedApp');
-  const appData = products.find(p => p.id === purchasedAppId) || products[0];
+  useEffect(() => {
+    const fetchTenant = async () => {
+      try {
+        const token = localStorage.getItem('saas_auth_token');
+        if (!token) return;
+        const res = await fetch('/api/tenant/info', {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        if (res.ok) {
+          const data = await res.json();
+          setTenantInfo(data.tenant);
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    };
+    fetchTenant();
+  }, []);
+
+  // Lấy dữ liệu mua hàng (Tạm thời mockup theo gói đăng ký ban đầu)
+  // Trong thực tế sẽ lấy từ DB phần Purchases
+  const appData = products && products.length > 0 ? products[0] : null;
 
   return (
     <div className="min-h-screen bg-slate-50 flex pt-20">
@@ -32,7 +56,7 @@ export default function CustomerDashboard() {
         </div>
         
         <div className="absolute bottom-20 left-0 w-full p-6">
-          <button className="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-red-600 hover:bg-red-50 transition-colors">
+          <button onClick={logout} className="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-red-600 hover:bg-red-50 transition-colors">
             <LogOut size={20} /> Đăng xuất
           </button>
         </div>
@@ -43,25 +67,25 @@ export default function CustomerDashboard() {
         <div className="max-w-5xl mx-auto">
           <header className="mb-8 flex justify-between items-end">
             <div>
-              <h1 className="text-3xl font-display font-bold text-slate-900 mb-2">Xin chào, Nguyễn Văn A 👋</h1>
+              <h1 className="text-3xl font-display font-bold text-slate-900 mb-2">Xin chào, {currentUser?.name || 'Khách hàng'} 👋</h1>
               <p className="text-slate-500">Quản lý tất cả hệ thống và phần mềm bạn đang thuê tại NTL_BinhThuong.</p>
             </div>
           </header>
 
           {activeTab === 'apps' && (
             <div className="space-y-6">
-              <h2 className="text-xl font-bold font-display text-slate-800">Sản phẩm đang hoạt động</h2>
+              <h2 className="text-xl font-bold font-display text-slate-800">Cửa hàng: {tenantInfo?.name || 'Chưa cập nhật'}</h2>
               
-              {purchasedAppId ? (
+              {tenantInfo ? (
                 <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm flex flex-col md:flex-row gap-6 items-center">
-                   <div className={`w-20 h-20 rounded-2xl bg-gradient-to-br ${appData.color} flex items-center justify-center shrink-0 shadow-lg`}>
+                   <div className={`w-20 h-20 rounded-2xl bg-gradient-to-br from-primary-500 to-indigo-600 flex items-center justify-center shrink-0 shadow-lg`}>
                      <Package className="w-10 h-10 text-white" />
                    </div>
                    <div className="flex-1">
                      <div className="flex items-center gap-3 mb-1">
-                       <h3 className="text-2xl font-bold font-display">{appData.name}</h3>
+                       <h3 className="text-2xl font-bold font-display">{tenantInfo.name}</h3>
                        <span className="inline-flex items-center gap-1 px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-bold">
-                         <CheckCircle2 size={14}/> Đang chạy
+                         <CheckCircle2 size={14}/> {tenantInfo.status === 'TRIAL' ? 'Đang dùng thử' : 'Đang chạy'}
                        </span>
                      </div>
                      <p className="text-slate-500 text-sm mb-4">Gói Doanh Nghiệp (Tối đa 100 tài xế)</p>
@@ -79,7 +103,7 @@ export default function CustomerDashboard() {
                    </div>
                    
                    <div className="flex flex-col gap-3 w-full md:w-auto">
-                     <a href={`http://admin.doanhnghiepcuaban.com`} target="_blank" rel="noreferrer" className="flex items-center justify-center gap-2 bg-primary-600 text-white px-6 py-3 rounded-xl font-medium hover:bg-primary-700 transition-colors shadow-lg shadow-primary-600/20">
+                     <a href={`http://${tenantInfo.subdomain}.saas.com`} target="_blank" rel="noreferrer" className="flex items-center justify-center gap-2 bg-primary-600 text-white px-6 py-3 rounded-xl font-medium hover:bg-primary-700 transition-colors shadow-lg shadow-primary-600/20">
                        Mở Hệ Thống <ExternalLink size={18} />
                      </a>
                      <button className="flex items-center justify-center gap-2 bg-white text-slate-700 border border-slate-200 px-6 py-3 rounded-xl font-medium hover:bg-slate-50 transition-colors">
@@ -122,11 +146,11 @@ export default function CustomerDashboard() {
                       </tr>
                     </thead>
                     <tbody>
-                      {purchasedAppId ? (
+                      {tenantInfo ? (
                         <tr className="border-b border-slate-100 last:border-0 hover:bg-slate-50">
-                          <td className="px-6 py-4 font-mono text-slate-600">TXN-89234</td>
-                          <td className="px-6 py-4 font-medium">{appData?.name || 'Phần mềm'} (Thuê 1 tháng)</td>
-                          <td className="px-6 py-4 text-slate-900">{new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(appData?.pricing?.monthly || 0)}</td>
+                          <td className="px-6 py-4 font-mono text-slate-600">TXN-{tenantInfo._id ? tenantInfo._id.substring(0, 6).toUpperCase() : '89234'}</td>
+                          <td className="px-6 py-4 font-medium">Gói {tenantInfo.name || 'Phần mềm'} (Dùng thử)</td>
+                          <td className="px-6 py-4 text-slate-900">0 ₫</td>
                           <td className="px-6 py-4"><span className="px-2 py-1 bg-green-100 text-green-700 rounded text-xs font-medium">Thành công</span></td>
                         </tr>
                       ) : (

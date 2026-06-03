@@ -6,36 +6,55 @@ const ProductContext = createContext();
 export const useProducts = () => useContext(ProductContext);
 
 export const ProductProvider = ({ children }) => {
-  const [products, setProducts] = useState(() => {
-    const saved = localStorage.getItem('saas_products');
-    if (saved) {
-      try {
-        return JSON.parse(saved);
-      } catch (e) {
-        console.error('Lỗi khi phân tích dữ liệu sản phẩm trong localStorage');
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  const fetchProducts = async () => {
+    try {
+      setLoading(true);
+      const res = await fetch('/api/products');
+      const data = await res.json();
+      if (res.ok) {
+        setProducts(data);
+      } else {
+        // Fallback to initial if error (maybe not seeded yet)
+        setProducts(initialMockProducts);
       }
+    } catch (err) {
+      console.error(err);
+      setProducts(initialMockProducts);
+    } finally {
+      setLoading(false);
     }
-    return initialMockProducts;
-  });
+  };
 
   useEffect(() => {
-    localStorage.setItem('saas_products', JSON.stringify(products));
-  }, [products]);
+    fetchProducts();
+  }, []);
 
-  const addProduct = (product) => {
-    setProducts([...products, { ...product, id: `app-${Date.now()}` }]);
+  const addProduct = async (product) => {
+    try {
+      const res = await fetch('/api/products', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(product)
+      });
+      if (res.ok) {
+        fetchProducts(); // refresh
+      }
+    } catch(e) {}
   };
 
   const updateProduct = (id, updatedProduct) => {
-    setProducts(products.map(p => p.id === id ? { ...p, ...updatedProduct } : p));
+    setProducts(products.map(p => p._id === id || p.id === id ? { ...p, ...updatedProduct } : p));
   };
 
   const deleteProduct = (id) => {
-    setProducts(products.filter(p => p.id !== id));
+    setProducts(products.filter(p => p._id !== id && p.id !== id));
   };
 
   return (
-    <ProductContext.Provider value={{ products, addProduct, updateProduct, deleteProduct }}>
+    <ProductContext.Provider value={{ products, loading, addProduct, updateProduct, deleteProduct }}>
       {children}
     </ProductContext.Provider>
   );
