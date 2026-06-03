@@ -1,5 +1,6 @@
-import { connectDB } from '../../utils/db.js';
-import TenantCustomer from '../../models/TenantCustomer.js';
+import { connectDB } from '../utils/db.js';
+import TenantCustomer from '../models/TenantCustomer.js';
+import Tenant from '../models/Tenant.js';
 import jwt from 'jsonwebtoken';
 
 export default async function handler(req, res) {
