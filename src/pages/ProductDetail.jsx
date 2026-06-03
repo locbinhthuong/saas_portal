@@ -70,7 +70,7 @@ export default function ProductDetail() {
                  </div>
                  
                  {product.demoUrl ? (
-                   <iframe src={product.demoUrl} title="Demo" className="w-full h-[calc(100%-2rem)] mt-8 bg-white border-0" />
+                   <iframe src={product.demoUrl} allow="geolocation; microphone; camera; display-capture; autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share" title="Demo" className="w-full h-[calc(100%-2rem)] mt-8 bg-white border-0" />
                  ) : product.imgUrl ? (
                    <img src={product.imgUrl} alt="App UI" className="w-full h-[calc(100%-2rem)] object-cover mt-8 rounded-b-lg" />
                  ) : (

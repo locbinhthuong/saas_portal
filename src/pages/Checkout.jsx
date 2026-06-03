@@ -11,7 +11,7 @@ export default function Checkout() {
   const { currentUser } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-  const product = products.find(p => p.id === productId);
+  const product = products.find(p => p._id === productId || p.id === productId);
   const [step, setStep] = useState(1);
   
   if (!product) {
