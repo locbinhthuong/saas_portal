@@ -45,32 +45,18 @@ export default async function handler(req, res) {
 
     // Cập nhật Tenant
     // Trong thực tế, ở đây sẽ verify Webhook Stripe / VNPay
-    // Đặt ngày hết hạn dùng thử (ví dụ: +7 ngày)
-    const expiresAt = new Date();
-    expiresAt.setDate(expiresAt.getDate() + 7);
-
+    // Đặt trạng thái chờ duyệt, chưa set thời gian hết hạn vì chưa duyệt
     const updatedTenant = await Tenant.findByIdAndUpdate(
       decoded.tenantId,
       {
-        status: 'TRIAL',
+        status: 'PENDING_PAYMENT',
         subscriptionPlan: product.name,
-        trialExpiresAt: expiresAt
       },
       { new: true }
     );
 
-    // Bơm dữ liệu mẫu (Data Seeding)
-    const TenantCustomer = (await import('../../models/TenantCustomer.js')).default;
-    // Xóa dữ liệu cũ nếu có
-    await TenantCustomer.deleteMany({ tenantId: decoded.tenantId });
-    // Bơm 2 mẫu
-    await TenantCustomer.create([
-      { tenantId: decoded.tenantId, name: 'Khách hàng mẫu 1 (VIP)', phone: '0901234567', email: 'vip@gmail.com' },
-      { tenantId: decoded.tenantId, name: 'Khách hàng mẫu 2', phone: '0987654321', email: 'kh2@gmail.com' }
-    ]);
-
     return res.status(200).json({ 
-      message: 'Đăng ký thành công. Đã nạp dữ liệu mẫu!',
+      message: 'Gửi yêu cầu thanh toán thành công!',
       tenant: updatedTenant
     });
 

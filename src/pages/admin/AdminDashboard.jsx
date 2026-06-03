@@ -97,11 +97,37 @@ export default function AdminDashboard() {
                    <span className="text-yellow-600 bg-yellow-50 px-2 py-1 rounded-md font-medium text-xs">Dùng thử</span>
                  ) : tenant.status === 'ACTIVE' ? (
                    <span className="text-green-600 bg-green-50 px-2 py-1 rounded-md font-medium text-xs">Hoạt động</span>
+                 ) : tenant.status === 'PENDING_PAYMENT' ? (
+                   <span className="text-orange-600 bg-orange-50 px-2 py-1 rounded-md font-medium text-xs">Chờ duyệt</span>
                  ) : (
                    <span className="text-red-600 bg-red-50 px-2 py-1 rounded-md font-medium text-xs">Bị khóa</span>
                  )}
                </td>
-               <td className="px-4 py-4 text-slate-500">{tenant.subscriptionPlan || 'Miễn phí'}</td>
+               <td className="px-4 py-4 text-slate-500">
+                 {tenant.subscriptionPlan || 'Miễn phí'}
+                 {tenant.status === 'PENDING_PAYMENT' && (
+                   <button 
+                     onClick={async () => {
+                       const token = localStorage.getItem('saas_auth_token');
+                       const res = await fetch('/api/admin/approve-tenant', {
+                         method: 'POST',
+                         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                         body: JSON.stringify({ tenantId: tenant._id })
+                       });
+                       if (res.ok) {
+                         alert('Duyệt thành công!');
+                         window.location.reload();
+                       } else {
+                         const err = await res.json();
+                         alert(err.message);
+                       }
+                     }}
+                     className="block mt-2 bg-blue-600 text-white text-xs px-3 py-1.5 rounded-lg hover:bg-blue-700 transition"
+                   >
+                     Duyệt & Cấp phát
+                   </button>
+                 )}
+               </td>
              </tr>
             ))}
             {tenants.length === 0 && (

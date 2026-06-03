@@ -83,13 +83,19 @@ export default function Checkout() {
                 <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
                   <h2 className="text-2xl font-display font-bold mb-2">Thanh toán bằng VietQR</h2>
                   <p className="text-slate-500 mb-6">Mở app Ngân hàng và quét mã để thanh toán tự động.</p>
+                <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="bg-white p-8 rounded-3xl shadow-xl border border-slate-100 max-w-md w-full text-center relative overflow-hidden">
+                  <div className="w-16 h-16 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <CreditCard size={32} />
+                  </div>
+                  <h2 className="text-2xl font-bold font-display text-slate-900 mb-2">Chuyển khoản thanh toán</h2>
+                  <p className="text-slate-600 mb-6">Bạn đang mua gói <strong>{product.name}</strong> với giá {product.pricing.monthly}/tháng.</p>
                   
-                  <div className="bg-slate-50 rounded-2xl p-6 border border-slate-200 flex flex-col items-center justify-center text-center">
-                    <div className="w-48 h-48 bg-white p-2 rounded-xl border border-slate-200 shadow-sm mb-4">
-                      <img src={`https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=pay_${product.pricing.monthly}`} alt="QR Code" className="w-full h-full object-cover" />
-                    </div>
-                    <p className="font-medium text-slate-900">Số tiền: <span className="text-xl font-bold text-primary-600">{new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(product.pricing.monthly)}</span></p>
-                    <p className="text-sm text-slate-500 mt-2">Nội dung: <strong>NTL {product.id} {Math.floor(1000 + Math.random() * 9000)}</strong></p>
+                  <div className="bg-slate-50 rounded-2xl p-6 mb-6 border border-slate-100">
+                    <img src="https://api.vietqr.io/image/970436-0987654321-h1Z8jJz.jpg?accountName=ADMIN%20SAAS&amount=500000&addInfo=Thanh%20toan%20SaaS" alt="QR Code" className="w-48 h-48 mx-auto mb-4 rounded-xl border-4 border-white shadow-sm" />
+                    <p className="font-bold text-slate-800 text-lg">500.000 ₫</p>
+                    <p className="text-sm text-slate-500">Ngân hàng Vietcombank</p>
+                    <p className="text-sm text-slate-500">Chủ TK: NGUYEN VAN ADMIN</p>
+                    <p className="text-sm text-slate-500">STK: 0987654321</p>
                   </div>
                   
                   <button 
@@ -114,7 +120,7 @@ export default function Checkout() {
                         alert('Lỗi kết nối khi thanh toán');
                       }
                     }}
-                    className="w-full mt-6 bg-primary-600 text-white py-4 rounded-xl font-medium hover:bg-primary-700 transition-colors"
+                    className="w-full bg-primary-600 text-white py-4 rounded-xl font-medium hover:bg-primary-700 transition-colors shadow-lg shadow-primary-600/20"
                   >
                     Tôi đã chuyển khoản
                   </button>
@@ -122,22 +128,20 @@ export default function Checkout() {
               )}
               
               {step === 3 && (
-                <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="text-center py-10">
-                  <div className="w-20 h-20 rounded-full bg-green-100 flex items-center justify-center mx-auto mb-6">
-                    <CheckCircle2 className="w-10 h-10 text-green-500" />
+                <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="bg-white p-12 rounded-3xl shadow-xl border border-slate-100 max-w-lg w-full text-center">
+                  <div className="w-20 h-20 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-6 text-4xl">
+                    ⏱️
                   </div>
-                  <h2 className="text-3xl font-display font-bold mb-4">Đăng ký thành công!</h2>
+                  <h2 className="text-3xl font-bold font-display text-slate-900 mb-4">Đang chờ duyệt</h2>
                   <p className="text-slate-600 mb-8 max-w-md mx-auto">
-                    Chúng tôi đang khởi tạo hệ thống <strong>{product.name}</strong> cho doanh nghiệp của bạn. Thông tin truy cập sẽ được gửi vào Email trong vòng 10 phút.
+                    Hệ thống đã ghi nhận yêu cầu khởi tạo <strong>{product.name}</strong>. Vui lòng chờ Admin xác nhận giao dịch trong ít phút. Bạn sẽ nhận được thông báo khi Không gian làm việc được cấp phát thành công.
                   </p>
-                  <a 
-                    href={`/?workspace=${currentUser?.tenant?.subdomain}&token=${localStorage.getItem('saas_auth_token')}`}
-                    target="_blank"
-                    rel="noreferrer"
+                  <button 
+                    onClick={() => { window.location.href = '/dashboard'; }}
                     className="inline-block bg-slate-900 text-white px-8 py-3 rounded-full font-medium hover:bg-slate-800 transition-colors"
                   >
-                    Mở Ứng Dụng Của Bạn
-                  </a>
+                    Về Trang Chủ Khách Hàng
+                  </button>
                 </motion.div>
               )}
             </motion.div>

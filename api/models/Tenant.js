@@ -13,8 +13,8 @@ const TenantSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ['ACTIVE', 'TRIAL', 'EXPIRED', 'SUSPENDED'],
-    default: 'TRIAL',
+    enum: ['PENDING_PAYMENT', 'ACTIVE', 'TRIAL', 'EXPIRED', 'SUSPENDED'],
+    default: 'PENDING_PAYMENT',
   },
   trialExpiresAt: {
     type: Date,
