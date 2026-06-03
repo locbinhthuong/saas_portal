@@ -1,5 +1,5 @@
-import { connectDB } from '../../utils/db.js';
-import Tenant from '../../models/Tenant.js';
+import { connectDB } from '../utils/db.js';
+import Tenant from '../models/Tenant.js';
 import jwt from 'jsonwebtoken';
 
 export default async function handler(req, res) {
@@ -51,7 +51,7 @@ export default async function handler(req, res) {
     await tenant.save();
 
     // Bơm dữ liệu mẫu (Data Seeding) khi kích hoạt thành công
-    const TenantCustomer = (await import('../../models/TenantCustomer.js')).default;
+    const TenantCustomer = (await import('../models/TenantCustomer.js')).default;
     await TenantCustomer.deleteMany({ tenantId: tenant._id });
     await TenantCustomer.create([
       { tenantId: tenant._id, name: 'Khách hàng mẫu 1 (VIP)', phone: '0901234567', email: 'vip@gmail.com' },
