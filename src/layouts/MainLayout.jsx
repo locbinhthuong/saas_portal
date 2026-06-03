@@ -8,7 +8,10 @@ export default function MainLayout() {
   const { currentUser } = useAuth();
 
   return (
-    <div className="flex flex-col min-h-screen bg-slate-50 cyber-grid text-slate-900 layer-3d">
+    <div className="flex flex-col min-h-screen bg-slate-50 text-slate-900 relative">
+      {/* Background Grid Layer */}
+      <div className="fixed inset-0 cyber-grid pointer-events-none z-0"></div>
+      
       {/* Floating 3D Navbar */}
       <header className="fixed top-4 left-4 right-4 md:left-8 md:right-8 z-50 card-3d rounded-full py-3 px-6 max-w-7xl mx-auto flex items-center justify-between">
         <Link to="/" className="flex items-center gap-3 group">
