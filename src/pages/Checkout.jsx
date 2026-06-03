@@ -80,9 +80,6 @@ export default function Checkout() {
               )}
               
               {step === 2 && (
-                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-                  <h2 className="text-2xl font-display font-bold mb-2">Thanh toán bằng VietQR</h2>
-                  <p className="text-slate-500 mb-6">Mở app Ngân hàng và quét mã để thanh toán tự động.</p>
                 <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="bg-white p-8 rounded-3xl shadow-xl border border-slate-100 max-w-md w-full text-center relative overflow-hidden">
                   <div className="w-16 h-16 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-6">
                     <CreditCard size={32} />
