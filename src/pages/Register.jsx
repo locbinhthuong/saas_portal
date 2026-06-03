@@ -4,13 +4,13 @@ import { useAuth } from '../data/AuthContext';
 import { UserPlus } from 'lucide-react';
 
 export default function Register() {
-  const [formData, setFormData] = useState({ name: '', email: '', phone: '', password: '' });
+  const [formData, setFormData] = useState({ name: '', email: '', storeName: '', subdomain: '', password: '' });
   const { register } = useAuth();
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const result = register(formData.name, formData.email, formData.password, formData.phone);
+    const result = await register(formData.name, formData.email, formData.password, formData.storeName, formData.subdomain);
     if (result.success) {
        navigate('/dashboard', { replace: true });
     } else {
@@ -31,7 +31,7 @@ export default function Register() {
         
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1">Họ và tên / Tên Doanh nghiệp</label>
+            <label className="block text-sm font-medium text-slate-700 mb-1">Họ và tên Quản trị viên</label>
             <input type="text" required value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-primary-500 focus:ring-2 outline-none" placeholder="VD: Nguyễn Văn A" />
           </div>
           <div>
@@ -39,8 +39,16 @@ export default function Register() {
             <input type="email" required value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})} className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-primary-500 focus:ring-2 outline-none" placeholder="email@congty.com" />
           </div>
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1">Số điện thoại Zalo</label>
-            <input type="tel" required value={formData.phone} onChange={e => setFormData({...formData, phone: e.target.value})} className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-primary-500 focus:ring-2 outline-none" placeholder="09xxxx" />
+            <label className="block text-sm font-medium text-slate-700 mb-1">Tên Cửa Hàng / Doanh Nghiệp</label>
+            <input type="text" required value={formData.storeName} onChange={e => setFormData({...formData, storeName: e.target.value})} className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-primary-500 focus:ring-2 outline-none" placeholder="VD: Tiệm Bánh Trăng Khuyết" />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-slate-700 mb-1">Tên miền phụ (Subdomain)</label>
+            <div className="flex items-center">
+              <input type="text" required value={formData.subdomain} onChange={e => setFormData({...formData, subdomain: e.target.value.toLowerCase().replace(/[^a-z0-9]/g, '')})} className="w-full px-4 py-3 rounded-l-xl border border-slate-200 border-r-0 focus:border-primary-500 focus:ring-2 outline-none" placeholder="tiembanh" />
+              <span className="bg-slate-100 border border-slate-200 border-l-0 px-4 py-3 rounded-r-xl text-slate-500">.saas.com</span>
+            </div>
+            <p className="text-xs text-slate-400 mt-1">Chỉ nhập chữ thường và số (vd: tiembanh)</p>
           </div>
           <div>
             <label className="block text-sm font-medium text-slate-700 mb-1">Mật khẩu</label>
