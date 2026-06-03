@@ -13,13 +13,13 @@ export default function Login() {
   // Redirect back to where the user came from (e.g., checkout)
   const from = location.state?.from?.pathname || '/dashboard';
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const result = login(email, password);
+    const result = await login(email, password);
     if (result.success) {
        navigate(from, { replace: true });
     } else {
-       alert(result.message);
+       alert(result.message || 'Đăng nhập thất bại');
     }
   };
 
