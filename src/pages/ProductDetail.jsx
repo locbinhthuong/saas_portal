@@ -40,12 +40,18 @@ export default function ProductDetail() {
               </p>
               
               <div className="flex flex-col sm:flex-row gap-4">
-                <Link to={`/checkout/${product.id}`} className="inline-flex justify-center items-center gap-2 bg-primary-600 text-white px-8 py-4 rounded-xl font-medium hover:bg-primary-700 transition shadow-lg shadow-primary-600/30">
+                <Link to={`/checkout/${product.id || product._id}`} className="inline-flex justify-center items-center gap-2 bg-primary-600 text-white px-8 py-4 rounded-xl font-medium hover:bg-primary-700 transition shadow-lg shadow-primary-600/30">
                   Thuê ngay {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(product.pricing?.monthly || 0)}
                 </Link>
-                <button className="inline-flex justify-center items-center gap-2 bg-white/10 text-white px-8 py-4 rounded-xl font-medium hover:bg-white/20 transition backdrop-blur-sm border border-white/10">
-                  <Play className="w-5 h-5 fill-white shadow-lg" /> Bản Trải Nghiệm Demo
-                </button>
+                {product.demoUrl ? (
+                  <a href={product.demoUrl} target="_blank" rel="noreferrer" className="inline-flex justify-center items-center gap-2 bg-white/10 text-white px-8 py-4 rounded-xl font-medium hover:bg-white/20 transition backdrop-blur-sm border border-white/10">
+                    <Play className="w-5 h-5 fill-white shadow-lg" /> Mở Demo Toàn Màn Hình
+                  </a>
+                ) : (
+                  <button disabled className="inline-flex justify-center items-center gap-2 bg-white/5 text-slate-400 px-8 py-4 rounded-xl font-medium cursor-not-allowed border border-white/5">
+                    Chưa có bản Demo
+                  </button>
+                )}
               </div>
             </motion.div>
             
@@ -63,12 +69,14 @@ export default function ProductDetail() {
                    <div className="w-3 h-3 rounded-full bg-green-500"></div>
                  </div>
                  
-                 {product.imgUrl ? (
-                   <img src={product.imgUrl} alt="App UI" className="w-full h-full object-cover mt-8 rounded-lg" />
+                 {product.demoUrl ? (
+                   <iframe src={product.demoUrl} title="Demo" className="w-full h-[calc(100%-2rem)] mt-8 bg-white border-0" />
+                 ) : product.imgUrl ? (
+                   <img src={product.imgUrl} alt="App UI" className="w-full h-[calc(100%-2rem)] object-cover mt-8 rounded-b-lg" />
                  ) : (
-                   <div className="mt-8 text-slate-500 flex flex-col items-center gap-4">
+                   <div className="mt-8 h-[calc(100%-2rem)] w-full text-slate-500 flex flex-col items-center justify-center gap-4 bg-slate-800 rounded-b-lg">
                       <Box size={48} className="text-slate-600" />
-                      <p className="font-medium text-slate-400">Hình ảnh giao diện phần mềm</p>
+                      <p className="font-medium text-slate-400">Chưa có bản Demo hoặc Hình ảnh</p>
                    </div>
                  )}
               </div>

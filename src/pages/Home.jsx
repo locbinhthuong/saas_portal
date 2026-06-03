@@ -93,15 +93,9 @@ export default function Home() {
                 </ul>
                 
                 <div className="flex flex-col gap-3 relative z-20">
-                  {product.demoUrl ? (
-                    <a href={product.demoUrl} target="_blank" rel="noreferrer" className="block w-full py-3 text-center rounded-xl bg-white hover:bg-slate-50 border border-slate-200 text-slate-900 font-bold transition-all shadow-sm hover:shadow-md">
-                      Dùng Thử Ngay
-                    </a>
-                  ) : (
-                    <button disabled className="block w-full py-3 text-center rounded-xl bg-slate-100 text-slate-400 font-bold cursor-not-allowed">
-                      Chưa có bản Demo
-                    </button>
-                  )}
+                  <Link to={`/product/${product.id || product._id}`} className="block w-full py-3 text-center rounded-xl bg-white hover:bg-slate-50 border border-slate-200 text-slate-900 font-bold transition-all shadow-sm hover:shadow-md">
+                    Xem Chi Tiết & Dùng Thử
+                  </Link>
                   <Link to={`/checkout/${product.id}`} className="block w-full py-3 text-center rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-bold transition-all hover:scale-[1.02] shadow-md">
                     Thuê từ {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(product.pricing.monthly)} / Tháng
                   </Link>
