@@ -42,6 +42,14 @@ export default async function handler(req, res) {
         return res.status(400).json({ message: 'Vui lòng nhập tên và SĐT' });
       }
 
+      // FEATURE GATE (Giới hạn Quota)
+      // Để hoàn chỉnh, ta nên truy vấn bảng Tenant để xem status. 
+      // Nhưng để demo nhanh, ta chỉ cho tối đa 5 bản ghi.
+      const count = await TenantCustomer.countDocuments({ tenantId: decoded.tenantId });
+      if (count >= 5) {
+        return res.status(403).json({ message: 'QUOTA EXCEEDED: Gói dùng thử chỉ cho phép tối đa 5 khách hàng. Vui lòng thanh toán để thêm mới!' });
+      }
+
       const newCustomer = await TenantCustomer.create({
         tenantId: decoded.tenantId, // Gắn cứng từ Token, chống giả mạo
         name,
